@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VIN Year Lookup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 50px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .error {
+      color: red;
+    }
+
+    #warnings {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #856404;
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>VIN Year Decoder</h1>
+  <p>Enter a VIN number to get the production year and manufacturer:</p>
+  <input type="text" id="vinInput" maxlength="17" placeholder="Enter VIN here">
+  <div id="result"></div>
+
+  <div id="warnings">
+    <strong>Note:</strong><br>
+    This decoder may not work correctly for the following brands:<br><br>
+    <strong>Trucks:</strong><br>
+    - Mercedes-Benz<br>
+    - Scania<br>
+    - DAF<br>
+    - MAN (might be a year off)<br><br>
+    <strong>Cars:</strong><br>
+    - Renault<br>
+  </div>
+
+  <script>
+    const vinYearMap = {
+      A: [1980, 2010], B: [1981, 2011], C: [1982, 2012], D: [1983, 2013],
+      E: [1984, 2014], F: [1985, 2015], G: [1986, 2016], H: [1987, 2017],
+      J: [1988, 2018], K: [1989, 2019], L: [1990, 2020], M: [1991, 2021],
+      N: [1992, 2022], P: [1993, 2023], R: [1994, 2024], S: [1995, 2025],
+      T: [1996, 2026], V: [1997, 2027], W: [1998, 2028], X: [1999, 2029],
+      Y: [2000], 1: [2001], 2: [2002], 3: [2003], 4: [2004], 5: [2005],
+      6: [2006], 7: [2007], 8: [2008], 9: [2009],
+    };
+
+    let wmiData = {};
+
+    // Load WMI data from external JSON file
+    fetch('wmi.json')
+      .then(res => res.json())
+      .then(data => {
+        wmiData = data;
+      })
+      .catch(err => {
+        document.getElementById('result').innerHTML = '<span class="error">Failed to load WMI data.</span>';
+        console.error("Error loading WMI JSON:", err);
+      });
+
+    document.getElementById('vinInput').addEventListener('input', function () {
+      const vin = this.value.toUpperCase().trim();
+      const resultDiv = document.getElementById('result');
+
+      if (vin.length < 10) {
+        resultDiv.innerHTML = '<span class="error">VIN must be at least 10 characters long.</span>';
+        return;
+      }
+
+      const wmi = vin.substring(0, 3);
+      const yearCode = vin[9];
+      const make = wmiData[wmi] || "Unknown manufacturer";
+      const years = vinYearMap[yearCode];
+
+      let html = `WMI: <strong>${wmi}</strong> → <strong>${make}</strong><br>`;
+      html += `10th character: <strong>${yearCode}</strong><br>`;
+
+      if (years) {
+        html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
+      } else {
+        html += `<span class="error">Invalid year code.</span>`;
+      }
+
+      resultDiv.innerHTML = html;
+    });
+  </script>
+
+</body>
+</html>

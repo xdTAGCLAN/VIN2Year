@@ -41,6 +41,34 @@
       margin-right: auto;
       border-radius: 8px;
     }
+
+    .tesla-details {
+      background: #f0f8f0 !important;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #00a650;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .tesla-details h3 {
+      margin-top: 0;
+      color: #00a650;
+    }
+
+    .vw-details {
+      background: #e8f4fd !important;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #0066cc;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .vw-details h3 {
+      margin-top: 0;
+      color: #0066cc;
+    }
   </style>
 </head>
 <body>
@@ -129,42 +157,39 @@
         } else {
             html += `<span class="error">Invalid year code.</span>`;
         }
-		
-		// Inside your existing input event listener, add Tesla detection:
-if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
-    // Your existing Volkswagen code...
-} else if (wmi === '5YJ' || wmi === 'SFZ') {
-    // Tesla detection
-    const teslaResult = teslaVinDecoder.decodeVIN(vin);
-    
-    if (teslaResult.isTesla) {
-        html += `<br><br><div style="background: #f0f8f0; padding: 15px; border-radius: 8px; border-left: 4px solid #00a650;">`;
-        html += `<h3 style="margin-top: 0; color: #00a650;">Tesla Specific Details</h3>`;
-        html += `<strong>Model:</strong> ${teslaResult.details.model}<br>`;
-        html += `<strong>Body Type:</strong> ${teslaResult.details.bodyType}<br>`;
-        
-        if (teslaResult.details.model === 'Tesla Roadster') {
-            html += `<strong>Region:</strong> ${teslaResult.details.region}<br>`;
-            html += `<strong>Safety Systems:</strong> ${teslaResult.details.roadsterSafety}<br>`;
-        } else {
-            html += `<strong>Safety Systems:</strong> ${teslaResult.details.safetySystems}<br>`;
-            html += `<strong>Battery/Charging:</strong> ${teslaResult.details.batteryCharging}<br>`;
+
+        // Tesla detection
+        if (wmi === '5YJ' || wmi === 'SFZ' || wmi === '7G2' || wmi === 'LRW' || wmi === '7SA' || wmi === 'XP7') {
+            const teslaResult = teslaVinDecoder.decodeVIN(vin);
+            
+            if (teslaResult.isTesla) {
+                html += `<div class="tesla-details">`;
+                html += `<h3>Tesla Specific Details</h3>`;
+                html += `<strong>Model:</strong> ${teslaResult.details.model}<br>`;
+                html += `<strong>Body Type:</strong> ${teslaResult.details.bodyType}<br>`;
+                
+                if (teslaResult.details.model === 'Tesla Roadster') {
+                    html += `<strong>Region:</strong> ${teslaResult.details.region}<br>`;
+                    html += `<strong>Safety Systems:</strong> ${teslaResult.details.roadsterSafety}<br>`;
+                } else {
+                    html += `<strong>Safety Systems:</strong> ${teslaResult.details.safetySystems}<br>`;
+                    html += `<strong>Battery/Charging:</strong> ${teslaResult.details.batteryCharging}<br>`;
+                }
+                
+                html += `<strong>Powertrain:</strong> ${teslaResult.details.powertrain}<br>`;
+                html += `<strong>Manufacturing Plant:</strong> ${teslaResult.details.manufacturingPlant}<br>`;
+                html += `<strong>Production Phase:</strong> ${teslaResult.details.productionPhase}<br>`;
+                html += `</div>`;
+            }
         }
-        
-        html += `<strong>Powertrain:</strong> ${teslaResult.details.powertrain}<br>`;
-        html += `<strong>Manufacturing Plant:</strong> ${teslaResult.details.manufacturingPlant}<br>`;
-        html += `<strong>Production Phase:</strong> ${teslaResult.details.productionPhase}<br>`;
-        html += `</div>`;
-    }
-}
 
         // Check if it's a Volkswagen VIN and show additional details
         if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
             const vwResult = vwVinDecoder.decodeVIN(vin);
             
             if (vwResult.isVolkswagen) {
-                html += `<br><br><div style="background: #e8f4fd; padding: 15px; border-radius: 8px; border-left: 4px solid #0066cc;">`;
-                html += `<h3 style="margin-top: 0; color: #0066cc;">Volkswagen Specific Details</h3>`;
+                html += `<div class="vw-details">`;
+                html += `<h3>Volkswagen Specific Details</h3>`;
                 html += `<strong>Market:</strong> ${vwResult.market.toUpperCase()}<br>`;
                 html += `<strong>Model:</strong> ${vwResult.details.model}<br>`;
                 html += `<strong>Assembly Plant:</strong> ${vwResult.details.assemblyPlant}<br>`;
@@ -181,13 +206,13 @@ if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
 
         resultDiv.innerHTML = html;
     });
-</script>
+  </script>
 
-<!-- Include the VW decoder script -->
-<script src="vw-vin-decoder.js"></script>
+  <!-- Include the VW decoder script -->
+  <script src="vw-vin-decoder.js"></script>
 
-<!-- Include the Tesla decoder script -->
-<script src="tesla-vin-decoder.js"></script>
+  <!-- Include the Tesla decoder script -->
+  <script src="tesla-vin-decoder.js"></script>
 
 </body>
 </html>

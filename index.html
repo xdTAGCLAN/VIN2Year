@@ -85,54 +85,78 @@
 
   <script>
     const vinYearMap = {
-      A: [1980, 2010], B: [1981, 2011], C: [1982, 2012], D: [1983, 2013],
-      E: [1984, 2014], F: [1985, 2015], G: [1986, 2016], H: [1987, 2017],
-      J: [1988, 2018], K: [1989, 2019], L: [1990, 2020], M: [1991, 2021],
-      N: [1992, 2022], P: [1993, 2023], R: [1994, 2024], S: [1995, 2025],
-      T: [1996, 2026], V: [1997, 2027], W: [1998, 2028], X: [1999, 2029],
-      Y: [2000], 1: [2001], 2: [2002], 3: [2003], 4: [2004], 5: [2005],
-      6: [2006], 7: [2007], 8: [2008], 9: [2009],
+        A: [1980, 2010], B: [1981, 2011], C: [1982, 2012], D: [1983, 2013],
+        E: [1984, 2014], F: [1985, 2015], G: [1986, 2016], H: [1987, 2017],
+        J: [1988, 2018], K: [1989, 2019], L: [1990, 2020], M: [1991, 2021],
+        N: [1992, 2022], P: [1993, 2023], R: [1994, 2024], S: [1995, 2025],
+        T: [1996, 2026], V: [1997, 2027], W: [1998, 2028], X: [1999, 2029],
+        Y: [2000], 1: [2001], 2: [2002], 3: [2003], 4: [2004], 5: [2005],
+        6: [2006], 7: [2007], 8: [2008], 9: [2009],
     };
 
     let wmiData = {};
 
     // Load WMI data from external JSON file
     fetch('wmi.json')
-      .then(res => res.json())
-      .then(data => {
-        wmiData = data;
-      })
-      .catch(err => {
-        document.getElementById('result').innerHTML = '<span class="error">Failed to load WMI data.</span>';
-        console.error("Error loading WMI JSON:", err);
-      });
+        .then(res => res.json())
+        .then(data => {
+            wmiData = data;
+        })
+        .catch(err => {
+            document.getElementById('result').innerHTML = '<span class="error">Failed to load WMI data.</span>';
+            console.error("Error loading WMI JSON:", err);
+        });
 
     document.getElementById('vinInput').addEventListener('input', function () {
-      const vin = this.value.toUpperCase().trim();
-      const resultDiv = document.getElementById('result');
+        const vin = this.value.toUpperCase().trim();
+        const resultDiv = document.getElementById('result');
 
-      if (vin.length < 10) {
-        resultDiv.innerHTML = '<span class="error">VIN must be at least 10 characters long.</span>';
-        return;
-      }
+        if (vin.length < 10) {
+            resultDiv.innerHTML = '<span class="error">VIN must be at least 10 characters long.</span>';
+            return;
+        }
 
-      const wmi = vin.substring(0, 3);
-      const yearCode = vin[9];
-      const make = wmiData[wmi] || "Unknown manufacturer";
-      const years = vinYearMap[yearCode];
+        const wmi = vin.substring(0, 3);
+        const yearCode = vin[9];
+        const make = wmiData[wmi] || "Unknown manufacturer";
+        const years = vinYearMap[yearCode];
 
-      let html = `WMI: <strong>${wmi}</strong> → <strong>${make}</strong><br>`;
-      html += `10th character: <strong>${yearCode}</strong><br>`;
+        let html = `WMI: <strong>${wmi}</strong> → <strong>${make}</strong><br>`;
+        html += `10th character: <strong>${yearCode}</strong><br>`;
 
-      if (years) {
-        html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
-      } else {
-        html += `<span class="error">Invalid year code.</span>`;
-      }
+        if (years) {
+            html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
+        } else {
+            html += `<span class="error">Invalid year code.</span>`;
+        }
 
-      resultDiv.innerHTML = html;
+        // Check if it's a Volkswagen VIN and show additional details
+        if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
+            const vwResult = vwVinDecoder.decodeVIN(vin);
+            
+            if (vwResult.isVolkswagen) {
+                html += `<br><br><div style="background: #e8f4fd; padding: 15px; border-radius: 8px; border-left: 4px solid #0066cc;">`;
+                html += `<h3 style="margin-top: 0; color: #0066cc;">Volkswagen Specific Details</h3>`;
+                html += `<strong>Market:</strong> ${vwResult.market.toUpperCase()}<br>`;
+                html += `<strong>Model:</strong> ${vwResult.details.model}<br>`;
+                html += `<strong>Assembly Plant:</strong> ${vwResult.details.assemblyPlant}<br>`;
+                
+                if (vwResult.market === 'american') {
+                    html += `<strong>Drive Configuration:</strong> ${vwResult.details.driveConfig}<br>`;
+                    html += `<strong>Engine Type:</strong> ${vwResult.details.engineType}<br>`;
+                    html += `<strong>Safety Systems:</strong> ${vwResult.details.safetySystems}<br>`;
+                }
+                
+                html += `</div>`;
+            }
+        }
+
+        resultDiv.innerHTML = html;
     });
-  </script>
+</script>
+
+<!-- Include the VW decoder script -->
+<script src="vw-vin-decoder.js"></script>
 
 </body>
 </html>

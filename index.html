@@ -42,21 +42,7 @@
       border-radius: 8px;
     }
 
-    .tesla-details {
-      background: #f0f8f0 !important;
-      padding: 15px;
-      border-radius: 8px;
-      border-left: 4px solid #00a650;
-      margin-top: 15px;
-      text-align: left;
-    }
-
-    .tesla-details h3 {
-      margin-top: 0;
-      color: #00a650;
-    }
-
-    .vw-details {
+    .vw-details, .tesla-details {
       background: #e8f4fd !important;
       padding: 15px;
       border-radius: 8px;
@@ -65,9 +51,38 @@
       text-align: left;
     }
 
-    .vw-details h3 {
+    .vw-details h3, .tesla-details h3 {
       margin-top: 0;
       color: #0066cc;
+    }
+
+    .tesla-details {
+      background: #e8f7e8 !important;
+      border-left: 4px solid #4CAF50;
+    }
+
+    .tesla-details h3 {
+      color: #4CAF50;
+    }
+
+    .tesla-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .tesla-table th, .tesla-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .tesla-table th {
+      background-color: #f2f2f2;
+    }
+
+    .tesla-table tr:nth-child(even) {
+      background-color: #f9f9f9;
     }
   </style>
 </head>
@@ -158,31 +173,6 @@
             html += `<span class="error">Invalid year code.</span>`;
         }
 
-        // Tesla detection
-        if (wmi === '5YJ' || wmi === 'SFZ' || wmi === '7G2' || wmi === 'LRW' || wmi === '7SA' || wmi === 'XP7') {
-            const teslaResult = teslaVinDecoder.decodeVIN(vin);
-            
-            if (teslaResult.isTesla) {
-                html += `<div class="tesla-details">`;
-                html += `<h3>Tesla Specific Details</h3>`;
-                html += `<strong>Model:</strong> ${teslaResult.details.model}<br>`;
-                html += `<strong>Body Type:</strong> ${teslaResult.details.bodyType}<br>`;
-                
-                if (teslaResult.details.model === 'Tesla Roadster') {
-                    html += `<strong>Region:</strong> ${teslaResult.details.region}<br>`;
-                    html += `<strong>Safety Systems:</strong> ${teslaResult.details.roadsterSafety}<br>`;
-                } else {
-                    html += `<strong>Safety Systems:</strong> ${teslaResult.details.safetySystems}<br>`;
-                    html += `<strong>Battery/Charging:</strong> ${teslaResult.details.batteryCharging}<br>`;
-                }
-                
-                html += `<strong>Powertrain:</strong> ${teslaResult.details.powertrain}<br>`;
-                html += `<strong>Manufacturing Plant:</strong> ${teslaResult.details.manufacturingPlant}<br>`;
-                html += `<strong>Production Phase:</strong> ${teslaResult.details.productionPhase}<br>`;
-                html += `</div>`;
-            }
-        }
-
         // Check if it's a Volkswagen VIN and show additional details
         if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
             const vwResult = vwVinDecoder.decodeVIN(vin);
@@ -203,6 +193,24 @@
                 html += `</div>`;
             }
         }
+        
+        // Check if it's a Tesla VIN and show additional details
+        if (wmi === '5YJ' || wmi === '7G2' || wmi === 'SFZ' || wmi === 'LRW' || wmi === '7SA' || wmi === 'XP7') {
+            const teslaResult = teslaVinDecoder.decodeVIN(vin);
+            
+            if (teslaResult.isTesla) {
+                html += `<div class="tesla-details">`;
+                html += `<h3>Tesla Specific Details</h3>`;
+                html += `<table class="tesla-table">`;
+                
+                for (const [key, value] of Object.entries(teslaResult.details)) {
+                    html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+                }
+                
+                html += `</table>`;
+                html += `</div>`;
+            }
+        }
 
         resultDiv.innerHTML = html;
     });
@@ -210,7 +218,7 @@
 
   <!-- Include the VW decoder script -->
   <script src="vw-vin-decoder.js"></script>
-
+  
   <!-- Include the Tesla decoder script -->
   <script src="tesla-vin-decoder.js"></script>
 

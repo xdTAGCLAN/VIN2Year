@@ -2,7 +2,7 @@
 const vwVinDecoder = {
     // 7th and 8th character - Model codes
     modelCodes: {
-        '11': 'VW 1200 (Typ 111) / Tipo 1 (Typ 111, 113) [1983...1997] / Volkswagen Kaffer',
+        '11': 'VW 1200 (Typ 111) / Tipo 1 (Typ 111, 113) [1983...1997] / Volkswagen Beetle',
         '12': 'up! (Typ 6A1, 6A5) [2014...]',
         '13': 'Scirocco (Typ 137) [2008...2012], Scirocco (Typ 138) [2015...]',
         '14': 'Caddy I (Typ 147, 148, 1AE) [1983...1992]',
@@ -11,7 +11,7 @@ const vwVinDecoder = {
         '17': 'Golf I Cabrio / Rabbit Convertible (Typ 154, 155) [1984], Golf II / Rabbit (Typ 177, 178, 179) [1983...1989], Golf II (Typ 171, 172, 173, 174) [1984], Golf II (Typ 176) [1985...1986], Golf (Typ 174, 176) [2000...2009], Jetta II (Typ 161, 162, 163, 164) [1984], Jetta II (Typ 167) [1989], Rabbit (Typ 175) [1983...1984], Caddy (Typ 170) [2000...2007], Scirocco (Typ 533, 534) [1984]',
         '18': 'Iltis (Typ 183) [1986...1988], Lavida (Typ 181, 182, 183) [2008...2013]',
         '19': 'Jetta II (Typ 165, 166, 167, 168) [1984...1989], Golf II (Typ 191, 192, 193, 194) [1984...1988], Golf II (1983...1992), Jetta II (1984...1991), Golf (Syncro) (Typ 1G1) [1986...1989], Jetta (Syncro) (Typ 1G2) [1986...1989]',
-        '1B': 'Tipo 1 (Typ 111, 113) [1998...2004] / Volkswagen Kaffer',
+        '1B': 'Tipo 1 (Typ 111, 113) [1998...2004] / Volkswagen Beetle',
         '1C': 'New Beetle (Typ 1C1, 1C9, 9C1, 9G1) [1998...2010]',
         '1E': 'Golf III Cabrio (1993...1998)',
         '1F': 'EOS (Typ 1F7, 1F8) [2006...2016]',
@@ -25,8 +25,8 @@ const vwVinDecoder = {
         '1W': 'Golf, Jetta, Vento',
         '1Y': 'New Beetle Convertible (2003...2010)',
         '21': 'LT',
-        '24': 'Transporter (бортовой)',
-        '25': 'Transporter / Multivan / California T3 (автобус, фургон, комби) (1980...1992)',
+        '24': 'Transporter (Platform truck)',
+        '25': 'Transporter / Multivan / California T3 (Bus, Van, Kombi) (1980...1992)',
         '28': 'LT',
         '2A': 'Transporter Syncro',
         '2C': 'Caddy III (2010...2015)',
@@ -56,7 +56,7 @@ const vwVinDecoder = {
         '5T': 'Touran II (2016...)',
         '5U': 'Gol (2008...)',
         '5Z': 'Fox (2004...), Suran/Spacebox (2011...2014)',
-        '60': 'Ameo / Polo (седан с укороченным багажником индийского производства) [2017...]',
+        '60': 'Ameo / Polo (Sedan with shortened trunk Indian production) [2017...]',
         '61': 'Polo Sedan (2011...)',
         '6C': 'Polo V (2015...)',
         '6E': 'Lupo 3L TDI',
@@ -85,7 +85,7 @@ const vwVinDecoder = {
         '9N': 'Polo IV (1999...2010)',
         '9U': 'Caddy',
         'A1': 'T-Roc [2018...]',
-        'A7': 'Polo (седан с укороченным багажником индийского производства для Южной Америки) [2017...]',
+        'A7': 'Polo (Sedan with shortened trunk Indian production for South America) [2017...]',
         'AA': 'up!',
         'AD': 'Tiguan II (2016...)',
         'AM': 'Golf Sportsvan (2015...)',
@@ -98,10 +98,10 @@ const vwVinDecoder = {
         'SE': 'Caddy IV [2016...]',
         'SG': 'Transporter / Multivan / Caravelle / California T6 [2015...2019]',
         'SV': 'Transporter / Multivan / Caravelle / California T6.1 [2019...]',
-        'SY': 'Crafter / E-Crafter с крытым кузовом [2017...]',
-        'SZ': 'Crafter / E-Crafter шасси [2017...]',
-        'UY': 'MAN TGE 35 с крытым кузовом [2017...]',
-        'UZ': 'MAN TGE 35 шасси [2017...]'
+        'SY': 'Crafter / E-Crafter with enclosed body [2017...]',
+        'SZ': 'Crafter / E-Crafter chassis [2017...]',
+        'UY': 'MAN TGE 35 with enclosed body [2017...]',
+        'UZ': 'MAN TGE 35 chassis [2017...]'
     },
 
     // 11th character - Assembly plant
@@ -205,9 +205,11 @@ const vwVinDecoder = {
                 result.details.model = this.modelCodes[modelCode] || 'Unknown model';
             }
 
-            // Get assembly plant (11th character)
-            const plantCode = vin[10];
-            result.details.assemblyPlant = this.assemblyPlants[plantCode] || 'Unknown assembly plant';
+            // Get assembly plant (11th character) - ONLY for European market
+            if (result.market === 'european') {
+                const plantCode = vin[10];
+                result.details.assemblyPlant = this.assemblyPlants[plantCode] || 'Unknown assembly plant';
+            }
 
             // American market specific decoding
             if (result.market === 'american') {

@@ -42,7 +42,7 @@
       border-radius: 8px;
     }
 
-    .vw-details, .tesla-details {
+    .vw-details, .tesla-details, .acura-details {
       background: #e8f4fd !important;
       padding: 15px;
       border-radius: 8px;
@@ -51,7 +51,7 @@
       text-align: left;
     }
 
-    .vw-details h3, .tesla-details h3 {
+    .vw-details h3, .tesla-details h3, .acura-details h3 {
       margin-top: 0;
       color: #0066cc;
     }
@@ -65,30 +65,39 @@
       color: #4CAF50;
     }
 
-    .tesla-table {
+    .acura-details {
+      background: #fde8e8 !important;
+      border-left: 4px solid #cc0000;
+    }
+
+    .acura-details h3 {
+      color: #cc0000;
+    }
+
+    .tesla-table, .acura-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
 
-    .tesla-table th, .tesla-table td {
+    .tesla-table th, .tesla-table td, .acura-table th, .acura-table td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
     }
 
-    .tesla-table th {
+    .tesla-table th, .acura-table th {
       background-color: #f2f2f2;
     }
 
-    .tesla-table tr:nth-child(even) {
+    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even) {
       background-color: #f9f9f9;
     }
   </style>
 </head>
 <body>
 
-  <h1>VIN Year Decoder</h1>
+  <h1>VIN Year Lookup</h1>
   <p>Enter a VIN number to get the production year and manufacturer:</p>
   <input type="text" id="vinInput" maxlength="17" placeholder="Enter VIN here">
   <div id="result"></div>
@@ -211,6 +220,26 @@
                 html += `</div>`;
             }
         }
+        
+        // Check if it's an Acura VIN and show additional details
+        if (wmi === '19U' || wmi === '19V' || wmi === '2HH' || wmi === '2HN' || 
+            wmi === '2HU' || wmi === '5FR' || wmi === '5FS' || wmi === '5J0' || 
+            wmi === '5J8' || wmi === '5KC' || wmi === 'JAE' || wmi === 'JH4') {
+            const acuraResult = acuraVinDecoder.decodeVIN(vin);
+            
+            if (acuraResult.isAcura) {
+                html += `<div class="acura-details">`;
+                html += `<h3>Acura Specific Details</h3>`;
+                html += `<table class="acura-table">`;
+                
+                for (const [key, value] of Object.entries(acuraResult.details)) {
+                    html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+                }
+                
+                html += `</table>`;
+                html += `</div>`;
+            }
+        }
 
         resultDiv.innerHTML = html;
     });
@@ -220,7 +249,10 @@
   <script src="vw-vin-decoder.js"></script>
   
   <!-- Include the Tesla decoder script -->
-  <script src="tesla-vin-decoder.js"></script>
+  <script src="tesla-vin-decoder-integrated.js"></script>
+  
+  <!-- Include the Acura decoder script -->
+  <script src="acura-vin-decoder.js"></script>
 
 </body>
 </html>

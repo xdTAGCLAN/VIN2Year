@@ -125,69 +125,13 @@
       html += `10th character: <strong>${yearCode}</strong><br>`;
 
       if (years) {
-			html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
-		} else {
-			html += `<span class="error">Invalid year code.</span>`;
-		}
+        html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
+      } else {
+        html += `<span class="error">Invalid year code.</span>`;
+      }
 
-		// -------------------------------
-		// Citroën VIN Expansion
-		// -------------------------------
-
-		const citroenWMIs = ["VF7", "VS7", "VR1", "MZZ"];
-
-		const citroenModelMap = {
-		"AZ": "2CV",
-		"DC": "C5 Break (wagon)",
-		"FC": "C3",
-		"GC": "Berlingo (van)",
-		"GJ": "Berlingo (passenger)",
-		"GX": "GSA",
-		"JM": "C2",
-		"LA": "C4 Picasso",
-		"LC": "C4",
-		"MA": "CX",
-		"N1": "Xara",
-		"N2": "ZX",
-		"N6": "Xara Picasso",
-		"RC": "C5 (hatchback)",
-		"S0": "SAXO",
-		"S1": "SAXO",
-		"TD": "C6",
-		"U6": "Evasion",
-		"UA": "Grand C4 Picasso",
-		"VD": "Visa",
-		"XB": "BX",
-		"X1": "Xantia (1993–1998)",
-		"X2": "Xantia (1998–2001)",
-		"Y3": "XM (1989–1994)",
-		"Y4": "XM (1995–2000)",
-		"ZA": "AX",
-		"ZB": "Jumper"
-		};
-
-		if (citroenWMIs.includes(wmi)) {
-			const pos4_5 = vin.substring(3, 5);
-			const pos6_7 = vin.substring(5, 7);
-			const pos8_9 = vin.substring(7, 9);
-			const pos10_11 = vin.substring(9, 11);
-			const pos12_13 = vin.substring(11, 13);
-			const serial = vin.substring(13, 17);
-
-			const modelDecoded = citroenModelMap[pos4_5] || "Unknown model line";
-
-			html += `<hr><b>Citroën VIN Breakdown:</b><br><br>`;
-			html += `Model line (positions 4–5): <b>${pos4_5}</b> → ${modelDecoded}<br>`;
-			html += `Body/engine/transmission (positions 6–7): <b>${pos6_7}</b><br>`;
-			html += `Positions 8–9: <b>${pos8_9}</b> (usually zeros)<br>`;
-			html += `Positions 10–11: <b>${pos10_11}</b> (year-dependent info or zeros)<br>`;
-			html += `Duplicate code (positions 12–13): <b>${pos12_13}</b> (should match 6–7)<br>`;
-			html += `Serial number (positions 14–17): <b>${serial}</b><br>`;
-		}
-
-		// FINAL OUTPUT
-		resultDiv.innerHTML = html;
-
+      resultDiv.innerHTML = html;
+    });
   </script>
 
 </body>

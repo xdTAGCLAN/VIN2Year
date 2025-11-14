@@ -42,7 +42,7 @@
       border-radius: 8px;
     }
 
-    .vw-details, .tesla-details, .acura-details {
+    .vw-details, .tesla-details, .acura-details, .toyota-details {
       background: #e8f4fd !important;
       padding: 15px;
       border-radius: 8px;
@@ -51,7 +51,7 @@
       text-align: left;
     }
 
-    .vw-details h3, .tesla-details h3, .acura-details h3 {
+    .vw-details h3, .tesla-details h3, .acura-details h3, .toyota-details h3 {
       margin-top: 0;
       color: #0066cc;
     }
@@ -74,23 +74,32 @@
       color: #cc0000;
     }
 
-    .tesla-table, .acura-table {
+    .toyota-details {
+      background: #fff0e8 !important;
+      border-left: 4px solid #ff6600;
+    }
+
+    .toyota-details h3 {
+      color: #ff6600;
+    }
+
+    .tesla-table, .acura-table, .toyota-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
 
-    .tesla-table th, .tesla-table td, .acura-table th, .acura-table td {
+    .tesla-table th, .tesla-table td, .acura-table th, .acura-table td, .toyota-table th, .toyota-table td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
     }
 
-    .tesla-table th, .acura-table th {
+    .tesla-table th, .acura-table th, .toyota-table th {
       background-color: #f2f2f2;
     }
 
-    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even) {
+    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even), .toyota-table tr:nth-child(even) {
       background-color: #f9f9f9;
     }
   </style>
@@ -241,6 +250,36 @@
             }
         }
 
+        // Check if it's a Toyota VIN and show additional details
+        if (wmi === 'JT1' || wmi === 'JT2' || wmi === 'JT3' || wmi === 'JT4' || 
+            wmi === 'JT5' || wmi === 'JT6' || wmi === 'JT7' || wmi === 'JT8' ||
+            wmi === 'JTE' || wmi === 'JTF' || wmi === 'JTG' || wmi === 'JTH' ||
+            wmi === 'JTJ' || wmi === 'JTK' || wmi === 'JTL' || wmi === 'JTM' ||
+            wmi === 'JTN' || wmi === 'JTP' || wmi === 'JTR' || wmi === 'JTS' ||
+            wmi === 'JTT' || wmi === 'JTU' || wmi === 'JTV' || wmi === 'JTW' ||
+            wmi === 'JTX' || wmi === 'JTY' || wmi === 'JTZ' || wmi === 'SB1' ||
+            wmi === 'SB2') {
+            const toyotaResult = toyotaVinDecoder.decodeVIN(vin);
+            
+            if (toyotaResult.isToyota) {
+                html += `<div class="toyota-details">`;
+                html += `<h3>Toyota Specific Details</h3>`;
+                html += `<table class="toyota-table">`;
+                html += `<tr><td><strong>Market:</strong></td><td>${toyotaResult.market.toUpperCase()}</td></tr>`;
+                html += `<tr><td><strong>Era:</strong></td><td>${toyotaResult.era}</td></tr>`;
+                html += `<tr><td><strong>Assembly Plant:</strong></td><td>${toyotaResult.details.assemblyPlant}</td></tr>`;
+                
+                for (const [key, value] of Object.entries(toyotaResult.details)) {
+                    if (key !== 'assemblyPlant') {
+                        html += `<tr><td><strong>${key}:</strong></td><td>${value}</td></tr>`;
+                    }
+                }
+                
+                html += `</table>`;
+                html += `</div>`;
+            }
+        }
+
         resultDiv.innerHTML = html;
     });
   </script>
@@ -249,12 +288,13 @@
   <script src="vw-vin-decoder.js"></script>
   
   <!-- Include the Tesla decoder script -->
-  <script src="tesla-vin-decoder.js"></script>
+  <script src="tesla-vin-decoder-integrated.js"></script>
   
   <!-- Include the Acura decoder script -->
   <script src="acura-vin-decoder.js"></script>
 
+  <!-- Include the Toyota decoder script -->
+  <script src="toyota-vin-decoder.js"></script>
+
 </body>
 </html>
-
-

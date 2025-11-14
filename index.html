@@ -42,7 +42,7 @@
       border-radius: 8px;
     }
 
-    .vw-details, .tesla-details, .acura-details {
+    .vw-details, .tesla-details, .acura-details, .alfa-details {
       background: #e8f4fd !important;
       padding: 15px;
       border-radius: 8px;
@@ -51,7 +51,7 @@
       text-align: left;
     }
 
-    .vw-details h3, .tesla-details h3, .acura-details h3 {
+    .vw-details h3, .tesla-details h3, .acura-details h3, .alfa-details h3 {
       margin-top: 0;
       color: #0066cc;
     }
@@ -74,23 +74,32 @@
       color: #cc0000;
     }
 
-    .tesla-table, .acura-table {
+    .alfa-details {
+      background: #e8e8fd !important;
+      border-left: 4px solid #0066cc;
+    }
+
+    .alfa-details h3 {
+      color: #0066cc;
+    }
+
+    .tesla-table, .acura-table, .alfa-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
 
-    .tesla-table th, .tesla-table td, .acura-table th, .acura-table td {
+    .tesla-table th, .tesla-table td, .acura-table th, .acura-table td, .alfa-table th, .alfa-table td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
     }
 
-    .tesla-table th, .acura-table th {
+    .tesla-table th, .acura-table th, .alfa-table th {
       background-color: #f2f2f2;
     }
 
-    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even) {
+    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even), .alfa-table tr:nth-child(even) {
       background-color: #f9f9f9;
     }
   </style>
@@ -240,6 +249,24 @@
                 html += `</div>`;
             }
         }
+        
+        // Check if it's an Alfa Romeo VIN and show additional details
+        if (wmi === 'ZAR') {
+            const alfaResult = alfaVinDecoder.decodeVIN(vin);
+            
+            if (alfaResult.isAlfaRomeo) {
+                html += `<div class="alfa-details">`;
+                html += `<h3>Alfa Romeo Specific Details</h3>`;
+                html += `<table class="alfa-table">`;
+                
+                for (const [key, value] of Object.entries(alfaResult.details)) {
+                    html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+                }
+                
+                html += `</table>`;
+                html += `</div>`;
+            }
+        }
 
         resultDiv.innerHTML = html;
     });
@@ -253,6 +280,9 @@
   
   <!-- Include the Acura decoder script -->
   <script src="acura-vin-decoder.js"></script>
+  
+  <!-- Include the Alfa Romeo decoder script -->
+  <script src="alfa-vin-decoder.js"></script>
 
 </body>
 </html>

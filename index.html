@@ -42,90 +42,47 @@
       border-radius: 8px;
     }
 
-    .vw-details, .tesla-details, .acura-details {
-      background: #e8f4fd !important;
+    .vw-details, .tesla-details, .acura-details, .audi-details {
       padding: 15px;
       border-radius: 8px;
-      border-left: 4px solid #0066cc;
+      border-left: 4px solid;
       margin-top: 15px;
       text-align: left;
     }
 
-    .vw-details h3, .tesla-details h3, .acura-details h3 {
-      margin-top: 0;
-      color: #0066cc;
-    }
+    .vw-details { background: #e8f4fd; border-left-color: #0066cc; }
+    .vw-details h3 { color: #0066cc; }
 
-    .tesla-details {
-      background: #e8f7e8 !important;
-      border-left: 4px solid #4CAF50;
-    }
+    .tesla-details { background: #e8f7e8; border-left-color: #4CAF50; }
+    .tesla-details h3 { color: #4CAF50; }
 
-    .tesla-details h3 {
-      color: #4CAF50;
-    }
+    .acura-details { background: #fde8e8; border-left-color: #cc0000; }
+    .acura-details h3 { color: #cc0000; }
 
-    .acura-details {
-      background: #fde8e8 !important;
-      border-left: 4px solid #cc0000;
-    }
+    .audi-details { background: #e8e8fd; border-left-color: #0000cc; }
+    .audi-details h3 { color: #0000cc; }
 
-    .acura-details h3 {
-      color: #cc0000;
-    }
-
-    .tesla-table, .acura-table {
+    .tesla-table, .acura-table, .audi-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
 
-    .tesla-table th, .tesla-table td, .acura-table th, .acura-table td {
+    .tesla-table th, .tesla-table td,
+    .acura-table th, .acura-table td,
+    .audi-table th, .audi-table td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
     }
 
-    .tesla-table th, .acura-table th {
+    .tesla-table th, .acura-table th, .audi-table th {
       background-color: #f2f2f2;
     }
 
-    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even) {
+    .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even), .audi-table tr:nth-child(even) {
       background-color: #f9f9f9;
     }
-	.audi-details {
-    background: #f0f0f0 !important;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #ff0000;
-    margin-top: 15px;
-    text-align: left;
-	}
-
-	.audi-details h3 {
-		margin-top: 0;
-		color: #ff0000;
-	}
-
-	.audi-table {
-		width: 100%;
-		border-collapse: collapse;
-		margin-top: 10px;
-	}
-
-	.audi-table th, .audi-table td {
-		border: 1px solid #ddd;
-		padding: 8px;
-		text-align: left;
-	}
-
-	.audi-table th {
-		background-color: #f2f2f2;
-	}
-
-	.audi-table tr:nth-child(even) {
-		background-color: #f9f9f9;
-	}
   </style>
 </head>
 <body>
@@ -181,12 +138,9 @@
 
     let wmiData = {};
 
-    // Load WMI data from external JSON file
     fetch('wmi.json')
         .then(res => res.json())
-        .then(data => {
-            wmiData = data;
-        })
+        .then(data => { wmiData = data; })
         .catch(err => {
             document.getElementById('result').innerHTML = '<span class="error">Failed to load WMI data.</span>';
             console.error("Error loading WMI JSON:", err);
@@ -208,89 +162,61 @@
 
         let html = `WMI: <strong>${wmi}</strong> → <strong>${make}</strong><br>`;
         html += `10th character: <strong>${yearCode}</strong><br>`;
+        html += years ? `Production year(s): <strong>${years.join(' or ')}</strong>` : `<span class="error">Invalid year code.</span>`;
 
-        if (years) {
-            html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
-        } else {
-            html += `<span class="error">Invalid year code.</span>`;
-        }
-
-        // Check if it's a Volkswagen VIN and show additional details
-        if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
+        // Volkswagen VIN
+        if (['WVW','WV1','WV2','WV3'].includes(wmi)) {
             const vwResult = vwVinDecoder.decodeVIN(vin);
-            
             if (vwResult.isVolkswagen) {
-                html += `<div class="vw-details">`;
-                html += `<h3>Volkswagen Specific Details</h3>`;
+                html += `<div class="vw-details"><h3>Volkswagen Specific Details</h3>`;
                 html += `<strong>Market:</strong> ${vwResult.market.toUpperCase()}<br>`;
                 html += `<strong>Model:</strong> ${vwResult.details.model}<br>`;
                 html += `<strong>Assembly Plant:</strong> ${vwResult.details.assemblyPlant}<br>`;
-                
                 if (vwResult.market === 'american') {
                     html += `<strong>Drive Configuration:</strong> ${vwResult.details.driveConfig}<br>`;
                     html += `<strong>Engine Type:</strong> ${vwResult.details.engineType}<br>`;
                     html += `<strong>Safety Systems:</strong> ${vwResult.details.safetySystems}<br>`;
                 }
-                
                 html += `</div>`;
             }
         }
-        
-        // Check if it's a Tesla VIN and show additional details
-        if (wmi === '5YJ' || wmi === '7G2' || wmi === 'SFZ' || wmi === 'LRW' || wmi === '7SA' || wmi === 'XP7') {
+
+        // Tesla VIN
+        if (['5YJ','7G2','SFZ','LRW','7SA','XP7'].includes(wmi)) {
             const teslaResult = teslaVinDecoder.decodeVIN(vin);
-            
             if (teslaResult.isTesla) {
-                html += `<div class="tesla-details">`;
-                html += `<h3>Tesla Specific Details</h3>`;
+                html += `<div class="tesla-details"><h3>Tesla Specific Details</h3>`;
                 html += `<table class="tesla-table">`;
-                
                 for (const [key, value] of Object.entries(teslaResult.details)) {
                     html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
                 }
-                
-                html += `</table>`;
-                html += `</div>`;
+                html += `</table></div>`;
             }
         }
-        
-		// Check if it's an Audi VIN and show additional details
-		if (wmi === 'WAU' || wmi === 'WA1' || wmi === 'WUA' || wmi === 'WU1' || 
-			wmi === 'TRU' || wmi === '3VW' || wmi === '8X3' || wmi === '8G1' || 
-			wmi === '93U' || wmi === '8TK' || wmi === '8W3') {
-			const audiResult = audiVinDecoder.decodeVIN(vin);
-    
-			if (audiResult.isAudi) {
-				html += `<div class="audi-details">`;
-				html += `<h3>Audi Specific Details</h3>`;
-				html += `<table class="audi-table">`;
-        
-				for (const [key, value] of Object.entries(audiResult.details)) {
-					html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
-				}
-        
-				html += `</table>`;
-				html += `</div>`;
-			}
-		}
-		
-        // Check if it's an Acura VIN and show additional details
-        if (wmi === '19U' || wmi === '19V' || wmi === '2HH' || wmi === '2HN' || 
-            wmi === '2HU' || wmi === '5FR' || wmi === '5FS' || wmi === '5J0' || 
-            wmi === '5J8' || wmi === '5KC' || wmi === 'JAE' || wmi === 'JH4') {
+
+        // Acura VIN
+        if (['19U','19V','2HH','2HN','2HU','5FR','5FS','5J0','5J8','5KC','JAE','JH4'].includes(wmi)) {
             const acuraResult = acuraVinDecoder.decodeVIN(vin);
-            
             if (acuraResult.isAcura) {
-                html += `<div class="acura-details">`;
-                html += `<h3>Acura Specific Details</h3>`;
+                html += `<div class="acura-details"><h3>Acura Specific Details</h3>`;
                 html += `<table class="acura-table">`;
-                
                 for (const [key, value] of Object.entries(acuraResult.details)) {
                     html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
                 }
-                
-                html += `</table>`;
-                html += `</div>`;
+                html += `</table></div>`;
+            }
+        }
+
+        // Audi VIN
+        if (['WAU','WA1','WUA','WU1','TRU','3VW','8X3','8G1','93U','8TK','8W3'].includes(wmi)) {
+            const audiResult = audiVinDecoder.decodeVIN(vin);
+            if (audiResult.isAudi) {
+                html += `<div class="audi-details"><h3>Audi Specific Details</h3>`;
+                html += `<table class="audi-table">`;
+                for (const [key, value] of Object.entries(audiResult.details)) {
+                    html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+                }
+                html += `</table></div>`;
             }
         }
 
@@ -298,16 +224,10 @@
     });
   </script>
 
-  <!-- Include the VW decoder script -->
+  <!-- Include all decoders -->
   <script src="vw-vin-decoder.js"></script>
-  
-  <!-- Include the Tesla decoder script -->
   <script src="tesla-vin-decoder-integrated.js"></script>
-  
-  <!-- Include the Acura decoder script -->
   <script src="acura-vin-decoder.js"></script>
-  
-  <!-- Include the Audi decoder script -->
   <script src="audi-vin-decoder.js"></script>
 
 </body>

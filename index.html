@@ -93,6 +93,39 @@
     .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+	.audi-details {
+    background: #f0f0f0 !important;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #ff0000;
+    margin-top: 15px;
+    text-align: left;
+	}
+
+	.audi-details h3 {
+		margin-top: 0;
+		color: #ff0000;
+	}
+
+	.audi-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 10px;
+	}
+
+	.audi-table th, .audi-table td {
+		border: 1px solid #ddd;
+		padding: 8px;
+		text-align: left;
+	}
+
+	.audi-table th {
+		background-color: #f2f2f2;
+	}
+
+	.audi-table tr:nth-child(even) {
+		background-color: #f9f9f9;
+	}
   </style>
 </head>
 <body>
@@ -221,6 +254,26 @@
             }
         }
         
+		// Check if it's an Audi VIN and show additional details
+		if (wmi === 'WAU' || wmi === 'WA1' || wmi === 'WUA' || wmi === 'WU1' || 
+			wmi === 'TRU' || wmi === '3VW' || wmi === '8X3' || wmi === '8G1' || 
+			wmi === '93U' || wmi === '8TK' || wmi === '8W3') {
+			const audiResult = audiVinDecoder.decodeVIN(vin);
+    
+			if (audiResult.isAudi) {
+				html += `<div class="audi-details">`;
+				html += `<h3>Audi Specific Details</h3>`;
+				html += `<table class="audi-table">`;
+        
+				for (const [key, value] of Object.entries(audiResult.details)) {
+					html += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+				}
+        
+				html += `</table>`;
+				html += `</div>`;
+			}
+		}
+		
         // Check if it's an Acura VIN and show additional details
         if (wmi === '19U' || wmi === '19V' || wmi === '2HH' || wmi === '2HN' || 
             wmi === '2HU' || wmi === '5FR' || wmi === '5FS' || wmi === '5J0' || 
@@ -253,6 +306,9 @@
   
   <!-- Include the Acura decoder script -->
   <script src="acura-vin-decoder.js"></script>
+  
+  <!-- Include the Audi decoder script -->
+  <script src="audi-vin-decoder.js"></script>
 
 </body>
 </html>

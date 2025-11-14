@@ -69,19 +69,12 @@ const toyotaVinDecoder = {
             'Y': 'Dyna 100, Dyna 150'
         },
 
-        // 8th and 9th character - Model series (letter to number conversion)
-        modelSeries: {
+        // 8th and 9th character - Model codes
+        modelCodes: {
             'K0': 'Carina E (T190)',
             'K1': 'Carina E (T191)',
             'N0': 'Avensis (T220)',
             'N1': 'Avensis (T221)'
-        },
-
-        // Letter to number conversion for model series
-        letterToNumber: {
-            'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15, 'G': 16, 'H': 17,
-            'J': 18, 'K': 19, 'L': 20, 'M': 21, 'N': 22, 'P': 23, 'R': 24, 'S': 25,
-            'T': 26, 'U': 27, 'V': 28, 'W': 29, 'X': 30, 'Y': 31, 'Z': 32
         }
     },
 
@@ -93,14 +86,14 @@ const toyotaVinDecoder = {
             'B': 'Sedan, 4 doors, 4x2',
             'C': 'Coupe, 2 doors, 4x2',
             'D': 'Hatchback/Liftback, 3 or 5 doors, 4x2',
-            'E': 'Station wagon (including high capacity like Corolla Verso)',
+            'E': 'Station wagon, including increased capacity (e.g., Toyota Corolla Verso)',
             'F': 'Convertible, 2 doors, 4x2',
             'G': 'Station wagon, 4 doors, 4x2',
             'H': 'Station wagon, 4 doors, 4x4',
             'J': 'Pickup, 4 doors, 4x2',
             'K': 'Station wagon, 5 doors, 4x2',
             'L': 'Station wagon, 5 doors, 4x4',
-            'M': 'Family van, 5 doors, 4x2',
+            'M': 'Family station wagon (VAN), 5 doors, 4x2',
             'P': 'Pickup, 2 doors (regular cab), 4x4',
             'S': 'Hatchback/Liftback, 3 doors, 4x4',
             'T': 'Pickup, 2 doors (extended cab), 4x2',
@@ -109,22 +102,22 @@ const toyotaVinDecoder = {
 
         // 5th character - Engine
         engine: {
-            'A': '4A-FE, 7A-FE (1.6L, 16V, gasoline) / 2AD-FTV (2.2L, 16V, turbo diesel, 150 HP from 2005)',
-            'B': '2AD-FHV (2.2L, 16V, turbo diesel, 170 HP from 2005)',
+            'A': '4A-FE, 7A-FE (1.6L, 16V, gasoline) or 2AD-FTV (2.2L, 16V, turbo diesel, 150 hp from 2005)',
+            'B': '2AD-FHV (2.2L, 16V, turbo diesel, 170 hp from 2005)',
             'C': '2C, 2CT, 2CT-E (2.0L, 8V, diesel)',
             'E': '2AZ-FE (2.4L, 16V, gasoline)',
             'F': '1MZ-FE (3.0L V6, 24V, gasoline)',
-            'J': '1AZ-FSE (2.0L, 16V, gasoline, 147 HP) D4 family',
-            'P': '2AZ-FSE (2.4L, 16V, gasoline, 163 HP) D4 family',
-            'R': '1ZZ-FE (1.8L, 16V, gasoline, 129 HP) EFI family',
+            'J': '1AZ-FSE (2.0L, 16V, gasoline, 147 hp) D4 family',
+            'P': '2AZ-FSE (2.4L, 16V, gasoline, 163 hp) D4 family',
+            'R': '1ZZ-FE (1.8L, 16V, gasoline, 129 hp) EFI family',
             'S': '3S-FE (2.0L, 16V, gasoline)',
-            'T': '2UZ-FE (4.7L V8, 32V, gasoline)',
-            'W': '1CD-FTV (2.0L, 16V, turbo diesel, 116 HP)',
-            'Z': '1ZZ-FE, 3ZZ-FE (1.8L, 16V, gasoline, 110 HP) EFI family'
+            'T': '2UZ-FE (4.7L, V8, 32V, gasoline)',
+            'W': '1CD-FTV (2.0L, 16V, turbo diesel, 116 hp)',
+            'Z': '1ZZ-FE, 3ZZ-FE (1.8L, 16V, gasoline, 110 hp) EFI family'
         },
 
         // 6th character - Series number
-        series: {
+        seriesNumber: {
             '0': 'Toyota Land Cruiser J100/J105',
             '2': 'Toyota Land Cruiser Prado J120'
         },
@@ -233,7 +226,7 @@ const toyotaVinDecoder = {
             'E': 'Sedan, 4 doors',
             'G': 'Hatchback, 3 doors',
             'H': 'Hatchback, 5 doors',
-            'J': 'Targa top coupe',
+            'J': 'Coupe with Targa roof',
             'K': 'Incomplete chassis',
             'L': 'Liftback, 3 doors',
             'M': 'Liftback, 5 doors',
@@ -258,7 +251,7 @@ const toyotaVinDecoder = {
             'J': 'Pickup, 4 doors, 4x2',
             'K': 'Station wagon, 5 doors, 4x2',
             'L': 'Station wagon, 5 doors, 4x4',
-            'M': 'Family van, 5 doors, 4x2',
+            'M': 'Family station wagon (VAN), 5 doors, 4x2',
             'P': 'Pickup, 2 doors (regular cab), 4x4',
             'S': 'Hatchback/Liftback, 3 doors, 4x4',
             'T': 'Pickup, 2 doors (extended cab), 4x2',
@@ -271,12 +264,12 @@ const toyotaVinDecoder = {
             'C': '2C, 2CT, 2CT-E (2.0L, 8V, diesel)',
             'F': '1MZ-FE (3.0L V6, 24V, gasoline)',
             'S': '3S-FE (2.0L, 16V, gasoline)',
-            'T': '2UZ-FE (4.7L V8, 32V, gasoline)',
+            'T': '2UZ-FE (4.7L, V8, 32V, gasoline)',
             'Z': '1ZZ-FE, 3ZZ-FE (1.8L, 16V, gasoline)'
         },
 
         // 6th character - Series number
-        series: {
+        seriesNumber: {
             '0': 'Toyota Land Cruiser J100/J105',
             '2': 'Toyota Land Cruiser Prado J120'
         },
@@ -352,33 +345,37 @@ const toyotaVinDecoder = {
 
         // Check if it's a Toyota VIN
         const wmi = vin.substring(0, 3);
-        if (wmi === 'JT1' || wmi === 'JT2' || wmi === 'JT3' || wmi === 'JT4' || 
-            wmi === 'JT5' || wmi === 'JT6' || wmi === 'JT7' || wmi === 'JT8' ||
-            wmi === 'JTE' || wmi === 'JTF' || wmi === 'JTG' || wmi === 'JTH' ||
-            wmi === 'JTJ' || wmi === 'JTK' || wmi === 'JTL' || wmi === 'JTM' ||
-            wmi === 'JTN' || wmi === 'JTP' || wmi === 'JTR' || wmi === 'JTS' ||
-            wmi === 'JTT' || wmi === 'JTU' || wmi === 'JTV' || wmi === 'JTW' ||
-            wmi === 'JTX' || wmi === 'JTY' || wmi === 'JTZ' || wmi === 'SB1' ||
-            wmi === 'SB2') {
-            result.isToyota = true;
+        const toyotaWMIs = [
+            'JT1', 'JT2', 'JT3', 'JT4', 'JT5', 'JT6', 'JT7', 'JT8', 'JTA', 'JTB', 'JTC', 'JTD', 'JTE', 'JTF', 'JTG', 'JTJ', 'JTK', 'JTL', 'JTM', 'JTN',
+            'SB1', '1NX', '2T1', '2T3', '3TM', '4T1', '4T2', '4T3', '4T4', '4TA', '5TB', '5TD', '5TE', '5TF', '5YF', '6T1', '8AJ', '9BR', 'ACU', 'AHH',
+            'AHT', 'VNK', 'XW7', 'MR0', 'MR1', 'MR2', 'MHF', 'MHK', 'MBJ', 'LFM', 'LFP', 'LVG', 'PN1', 'PN2', 'RKL'
+        ];
 
+        // Check if WMI starts with any Toyota prefix
+        const isToyota = toyotaWMIs.some(prefix => wmi.startsWith(prefix));
+        
+        if (isToyota) {
+            result.isToyota = true;
+            
             // Determine market and era
-            if (wmi === 'SB1' || wmi === 'SB2') {
+            if (wmi.startsWith('JT') || wmi.startsWith('SB1')) {
+                // European market
                 result.market = 'european';
-                result.era = 'post2002';
-            } else if (vin.startsWith('JT')) {
-                // Check year to determine era
-                const yearCode = vin[9];
-                const years = vinYearMap[yearCode];
                 
-                if (years && years[0] >= 2002) {
-                    result.market = 'northAmerican';
-                    result.era = 'post1996';
-                } else if (years && years[0] >= 1996) {
-                    result.market = 'northAmerican';
+                // Check if pre or post 2002 based on VIN pattern
+                if (vin.length >= 9 && vin[8] === '0' && vin.substring(6, 8).match(/[A-Z]{2}/)) {
+                    result.era = 'pre2002';
+                } else {
+                    result.era = 'post2002';
+                }
+            } else if (wmi.startsWith('1N') || wmi.startsWith('2T') || wmi.startsWith('3T') || wmi.startsWith('4T') || wmi.startsWith('5T')) {
+                // North American market
+                result.market = 'north_american';
+                
+                // Simple era determination based on VIN length and pattern
+                if (vin.length === 17 && vin[6] && vin[6].match(/[A-Z]/)) {
                     result.era = 'post1996';
                 } else {
-                    result.market = 'northAmerican';
                     result.era = 'pre1996';
                 }
             }
@@ -387,61 +384,74 @@ const toyotaVinDecoder = {
             const plantCode = vin[10];
             result.details.assemblyPlant = this.assemblyPlants[plantCode] || 'Unknown assembly plant';
 
-            // Decode based on market and era
-            if (result.market === 'european' && result.era === 'post2002') {
-                // European market since 2002
-                const bodyTypeCode = vin[3];
-                const engineCode = vin[4];
-                const seriesCode = vin[5];
-                const safetyCode = vin[6];
-                const modelCode = vin[7];
-
-                result.details.bodyType = this.europeanPost2002.bodyType[bodyTypeCode] || 'Unknown body type';
-                result.details.engine = this.europeanPost2002.engine[engineCode] || 'Unknown engine';
-                result.details.series = this.europeanPost2002.series[seriesCode] || 'Standard series';
-                result.details.safetySystems = this.europeanPost2002.safetySystems[safetyCode] || 'Standard safety systems';
-                result.details.model = this.europeanPost2002.model[modelCode] || 'Unknown model';
-
-            } else if (result.market === 'european') {
-                // European market before 2002
-                const bodyTypeCode = vin.substring(3, 5);
-                const engineCode = vin[5];
-                const modelLineCode = vin[6];
-                const modelSeriesCode = vin.substring(7, 9);
-
-                result.details.bodyType = this.europeanPre2002.bodyType[bodyTypeCode] || 'Unknown body type';
-                result.details.engine = this.europeanPre2002.engine[engineCode] || 'Unknown engine';
-                result.details.modelLine = this.europeanPre2002.modelLine[modelLineCode] || 'Unknown model line';
-                result.details.modelSeries = this.europeanPre2002.modelSeries[modelSeriesCode] || 'Unknown model series';
-
-            } else if (result.market === 'northAmerican' && result.era === 'post1996') {
-                // North American market since 1996
-                const bodyTypeCode = vin[3];
-                const engineCode = vin[4];
-                const seriesCode = vin[5];
-                const safetyCode = vin[6];
-                const modelCode = vin[7];
-
-                result.details.bodyType = this.northAmericanPost1996.bodyType[bodyTypeCode] || 'Unknown body type';
-                result.details.engine = this.northAmericanPost1996.engine[engineCode] || 'Unknown engine';
-                result.details.series = this.northAmericanPost1996.series[seriesCode] || 'Standard series';
-                result.details.safetySystems = this.northAmericanPost1996.safetySystems[safetyCode] || 'Standard safety systems';
-                result.details.model = this.northAmericanPost1996.model[modelCode] || 'Unknown model';
-
-            } else if (result.market === 'northAmerican') {
-                // North American market before 1996
-                const engineCode = vin[3];
-                const platformCode = vin[4];
-                const modelLineCode = vin[6];
-                const bodyTypeCode = vin[7];
-
-                result.details.engine = this.northAmericanPre1996.engine[engineCode] || 'Unknown engine';
-                result.details.platform = this.northAmericanPre1996.platform[platformCode] || 'Unknown platform';
-                result.details.modelLine = this.northAmericanPre1996.modelLine[modelLineCode] || 'Unknown model line';
-                result.details.bodyType = this.northAmericanPre1996.bodyType[bodyTypeCode] || 'Unknown body type';
+            // Market-specific decoding
+            if (result.market === 'european') {
+                if (result.era === 'pre2002') {
+                    // European pre-2002 decoding
+                    const bodyTypeCode = vin.substring(3, 5);
+                    result.details.bodyType = this.europeanPre2002.bodyType[bodyTypeCode] || 'Unknown body type';
+                    
+                    const engineCode = vin[5];
+                    result.details.engine = this.europeanPre2002.engine[engineCode] || 'Unknown engine';
+                    
+                    const modelLineCode = vin[6];
+                    result.details.modelLine = this.europeanPre2002.modelLine[modelLineCode] || 'Unknown model line';
+                    
+                    const modelCode = vin.substring(7, 9);
+                    result.details.model = this.europeanPre2002.modelCodes[modelCode] || 'Unknown model';
+                    
+                } else if (result.era === 'post2002') {
+                    // European post-2002 decoding
+                    const bodyTypeCode = vin[3];
+                    result.details.bodyType = this.europeanPost2002.bodyType[bodyTypeCode] || 'Unknown body type';
+                    
+                    const engineCode = vin[4];
+                    result.details.engine = this.europeanPost2002.engine[engineCode] || 'Unknown engine';
+                    
+                    const seriesCode = vin[5];
+                    result.details.series = this.europeanPost2002.seriesNumber[seriesCode] || 'Unknown series';
+                    
+                    const safetyCode = vin[6];
+                    result.details.safetySystems = this.europeanPost2002.safetySystems[safetyCode] || 'Unknown safety systems';
+                    
+                    const modelCode = vin[7];
+                    result.details.model = this.europeanPost2002.model[modelCode] || 'Unknown model';
+                }
+            } else if (result.market === 'north_american') {
+                if (result.era === 'pre1996') {
+                    // North American pre-1996 decoding
+                    const engineCode = vin[3];
+                    result.details.engine = this.northAmericanPre1996.engine[engineCode] || 'Unknown engine';
+                    
+                    const platformCode = vin[4];
+                    result.details.platform = this.northAmericanPre1996.platform[platformCode] || 'Unknown platform';
+                    
+                    const modelLineCode = vin[6];
+                    result.details.modelLine = this.northAmericanPre1996.modelLine[modelLineCode] || 'Unknown model line';
+                    
+                    const bodyTypeCode = vin[7];
+                    result.details.bodyType = this.northAmericanPre1996.bodyType[bodyTypeCode] || 'Unknown body type';
+                    
+                } else if (result.era === 'post1996') {
+                    // North American post-1996 decoding
+                    const bodyTypeCode = vin[3];
+                    result.details.bodyType = this.northAmericanPost1996.bodyType[bodyTypeCode] || 'Unknown body type';
+                    
+                    const engineCode = vin[4];
+                    result.details.engine = this.northAmericanPost1996.engine[engineCode] || 'Unknown engine';
+                    
+                    const seriesCode = vin[5];
+                    result.details.series = this.northAmericanPost1996.seriesNumber[seriesCode] || 'Unknown series';
+                    
+                    const safetyCode = vin[6];
+                    result.details.safetySystems = this.northAmericanPost1996.safetySystems[safetyCode] || 'Unknown safety systems';
+                    
+                    const modelCode = vin[7];
+                    result.details.model = this.northAmericanPost1996.model[modelCode] || 'Unknown model';
+                }
             }
 
-            // Get production year from 10th character
+            // Get year from 10th character
             const yearCode = vin[9];
             const years = vinYearMap[yearCode];
             if (years) {

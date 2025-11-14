@@ -183,7 +183,7 @@
         }
 
         // Check if it's a Volkswagen VIN and show additional details
-        if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3') {
+        if (wmi === 'WVW' || wmi === 'WV1' || wmi === 'WV2' || wmi === 'WV3' || wmi === 'WVG') {
             const vwResult = vwVinDecoder.decodeVIN(vin);
             
             if (vwResult.isVolkswagen) {
@@ -256,4 +256,5 @@
 
 </body>
 </html>
+
 

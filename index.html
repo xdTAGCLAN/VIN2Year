@@ -102,6 +102,53 @@
     .tesla-table tr:nth-child(even), .acura-table tr:nth-child(even), .toyota-table tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+    
+      .volvo-details {
+      background: #f0f8ff !important;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #003399;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .volvo-details h3 {
+      margin-top: 0;
+      color: #003399;
+    }
+
+    .volvo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .volvo-table th, .volvo-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .volvo-table th {
+      background-color: #e6f2ff;
+    }
+
+    .volvo-table tr:nth-child(even) {
+      background-color: #f9fbff;
+    }
+
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>VIN Year Lookup</h1>
+  <p>Enter a VIN number to get the production year and manufacturer:</p>
+  <input type="text" id="vinInput" maxlength="17" placeholder="Enter VIN here">
+  <div id="result"></div>
   </style>
 </head>
 <body>
@@ -168,7 +215,7 @@
             console.error("Error loading WMI JSON:", err);
         });
 
-    document.getElementById('vinInput').addEventListener('input', function () {
+    document.getElementById('vinInput').addEventListener('input', async function () {
         const vin = this.value.toUpperCase().trim();
         const resultDiv = document.getElementById('result');
 
@@ -189,6 +236,55 @@
             html += `Production year(s): <strong>${years.join(' or ')}</strong>`;
         } else {
             html += `<span class="error">Invalid year code.</span>`;
+        }
+
+        // Check if it's a Volvo VIN and show additional details
+        const volvoWMIs = ['3CE', '4V2', '4V4', '4V5', '4VG', '4VH', '7JR', '9BV', 'LVY', 'LYV', 'SCV', 'VS9', 'XLB', 'YB1', 'YB2', 'YB3', 'YV1', 'YV2', 'YV3', 'YV4', 'YV5', 'YV9', 'YVZ'];
+        if (volvoWMIs.includes(wmi)) {
+            // Add loading message
+            html += `<div class="volvo-details">`;
+            html += `<h3>Volvo Specific Details</h3>`;
+            html += `<div class="loading">Loading Volvo data...</div>`;
+            html += `</div>`;
+            
+            resultDiv.innerHTML = html;
+            
+            try {
+                const volvoResult = await volvoVinDecoder.decodeVIN(vin);
+                
+                if (volvoResult.isVolvo) {
+                    // Replace the loading message with actual data
+                    let volvoHtml = `<div class="volvo-details">`;
+                    volvoHtml += `<h3>Volvo Specific Details</h3>`;
+                    
+                    if (volvoResult.details.error) {
+                        volvoHtml += `<p><strong>Error:</strong> ${volvoResult.details.error}</p>`;
+                        if (volvoResult.details.fallbackInfo) {
+                            volvoHtml += `<table class="volvo-table">`;
+                            for (const [key, value] of Object.entries(volvoResult.details.fallbackInfo)) {
+                                volvoHtml += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+                            }
+                            volvoHtml += `</table>`;
+                        }
+                    } else {
+                        volvoHtml += `<table class="volvo-table">`;
+                        for (const [key, value] of Object.entries(volvoResult.details)) {
+                            volvoHtml += `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+                        }
+                        volvoHtml += `</table>`;
+                    }
+                    
+                    volvoHtml += `</div>`;
+                    
+                    // Update the result with Volvo data
+                    const baseHtml = html.split('<div class="volvo-details">')[0];
+                    resultDiv.innerHTML = baseHtml + volvoHtml;
+                }
+            } catch (error) {
+                console.error('Error processing Volvo VIN:', error);
+                const baseHtml = html.split('<div class="volvo-details">')[0];
+                resultDiv.innerHTML = baseHtml;
+            }
         }
 
         // Check if it's a Volkswagen VIN and show additional details
@@ -298,4 +394,5 @@
 
 </body>
 </html>
+
 

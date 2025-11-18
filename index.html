@@ -369,6 +369,11 @@
 
         resultDiv.innerHTML = html;
     });
+        // If not a Volvo VIN, set the initial HTML
+        if (!volvoWMIs.includes(wmi)) {
+            resultDiv.innerHTML = html;
+        }
+    });
   </script>
 
   <!-- Include the VW decoder script -->
@@ -383,8 +388,8 @@
   <!-- Include the Toyota decoder script -->
   <script src="toyota-vin-decoder.js"></script>
 
+  <!-- Include the Volvo decoder script -->
+  <script src="volvo-vin-decoder.js"></script>
+
 </body>
 </html>
-
-
-
